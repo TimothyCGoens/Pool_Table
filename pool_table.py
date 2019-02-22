@@ -1,20 +1,19 @@
-from datetime import datetime
+file_object = open("tables.txt", "w")
+
+
+import time
+import datetime
+from datetime import date
 from title_screen import title_screen
 import json
+localtime = time.asctime( time.localtime(time.time()) )
 
-file_object = open("tables.txt", "w")
 
 
 pool_tables = []
 
-
+# calls title_screen function in another file
 title_screen()
-
-def show_tables():
-    for pool_table in pool_tables:
-        print(f"Table {pool_table}")
-
-# options_menu()
 
 class PoolTable:
     def __init__(self, table_no):
@@ -23,27 +22,41 @@ class PoolTable:
         self.start_time = 0
         self.end_time = 0
         self.total_time = 0
-        #start start
-        #end time
+        self.display_start_time = time.time()
+        self.display_end_time = time.time()
+        self.cost = 0
 
     def __repr__(self):
-        return (f"{self.table_no} is {self.is_available}")
+        return (f"""{self.table_no} is {self.is_available}""")
 
     def check_out(self):
-        now = datetime.now()
-        self.is_available = now.strftime("Occupied %b %d, %y || %H:%m:%S")
-        #self.start_time =
-        self.end_time = datetime.now()
+        now = datetime.datetime.now()
+        self.is_available = now.strftime("Occupied %H:%m:%S ")
+        self.start_time = now.strftime("%H:%m:%S")
+        self.display_start_time = time.time()
 
 
     def check_in(self):
-        now = datetime.now()
+        now = datetime.datetime.now()
         self.is_available = "Open"
-        self.end_time = now
+        self.end_time = now.strftime("%H:%m:%S")
+        self.display_end_time = time.time()
+        total_time = (self.display_end_time - self.display_start_time)/60
+        self.cost = round(total_time * .50)
+        self.total_time = round(total_time)
+
+        with open("tables.txt", "a") as file_object:
+            file_object.write(f"""
+---------------------------------------
+Table {self.table_no}
+Start Time: {self.start_time}
+End time: {self.end_time}
+Total Time Played: {self.total_time}
+Total ${self.cost}
+---------------------------------------""")
 
 
-
-
+# creates 12 pool tables and puts them into a list
 for i in range(1,13):
     pool_table = PoolTable(i)
     pool_tables.append(pool_table)
@@ -53,9 +66,7 @@ def table_selection():
     user_input = ""
     while user_input != 0:
         show_tables()
-        user_input = int(input("""
-Please select a table:
-"""))
+        user_input = int(input("""\nPlease select a table: """))
         table_choice = user_input - 1
         pool_table = pool_tables[table_choice]
         pool_table.check_out()
@@ -64,40 +75,32 @@ Please select a table:
 
 
 def return_table():
-    user_input = int(input("""
-Which table would you like to check in:
-"""))
+    show_tables()
+    user_input = int(input("""\nWhich table would you like to check in: """))
     while user_input != 0:
         table_choice = user_input - 1
         pool_table = pool_tables[table_choice]
         pool_table.check_in()
         break
 
-# def options_menu():
-#     print("""
-# OPTIONS
-# Please select one of the following:
-# R) to rent out a table
-# C) to check a table back in
-# V) to view tables
-# Q) to quit to title screen
-# """)
-
-# options_menu()
+def show_tables():
+    for pool_table in pool_tables:
+        print(f"Table {pool_table}")
 
 user_input = ""
 while user_input != "q":
-    user_input = input("""
+    user_input = input("""\n\n\n\n\n\n\n\n\n\n\n\n\n\n
                                   OPTIONS MENU
 
-                        Please select one of the following:
                         -----------------------------------
-                        R) to rent out a table
-                        C) to check a table back in
-                        V) to view tables
-                        Q) to quit to title screen
+                        R) to Rent a Table
+                        C) to Check Table In
+                        V) to View Tables
+                        Q) to Quit to Title
                         -----------------------------------
-""")
+                              Make your selection:
+                                      """)
+
     if user_input == "r":
         table_selection()
     elif user_input == "c":
@@ -106,12 +109,3 @@ while user_input != "q":
         show_tables()
     elif user_input == "q":
         title_screen()
-
-
-        def return_table():
-            user_input = int(input("""
-        Which table would you like to check in:
-        """))
-            table_choice = user_input - 1
-            pool_table = pool_tables[table_choice]
-            pool_table.check_in()
