@@ -1,3 +1,6 @@
 # Pool_Table
 
-file to contain all my pool table project data
+2.22.19
+
+Version ready for submission! 
+
