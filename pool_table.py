@@ -31,7 +31,7 @@ class PoolTable:
 
     def check_out(self):
         now = datetime.datetime.now()
-        self.is_available = now.strftime("Occupied %H:%m:%S ")
+        self.is_available = now.strftime("Occupied")
         self.start_time = now.strftime("%H:%m:%S")
         self.display_start_time = time.time()
 
@@ -63,25 +63,49 @@ for i in range(1,13):
 
 
 def table_selection():
-    user_input = ""
-    while user_input != 0:
-        show_tables()
-        user_input = int(input("""\nPlease select a table: """))
-        table_choice = user_input - 1
-        pool_table = pool_tables[table_choice]
-        pool_table.check_out()
-        break
-        options_menu()
+    try:
+        user_input = ""
+        while user_input != 0:
+            show_tables()
+            user_input = int(input("""\nPlease select a table: """))
+            table_choice = user_input - 1
+            pool_table = pool_tables[table_choice]
+            if pool_table.is_available == "Occupied":
+                print("""
+------------ERROR-------------------------------------------------               
+WHOOPS!  Table is already in use, let's check out a different one!
+------------------------------------------------------------------""")
+            else:
+                pool_table.check_out()
+            break
+            options_menu()
+    except ValueError:
+        print("""\n
+----------------ERROR------------------------------------
+**DOH!  You have to choose the number of a table silly!**
+---------------------------------------------------------""")
 
 
 def return_table():
-    show_tables()
-    user_input = int(input("""\nWhich table would you like to check in: """))
-    while user_input != 0:
-        table_choice = user_input - 1
-        pool_table = pool_tables[table_choice]
-        pool_table.check_in()
-        break
+    try:
+        show_tables()
+        user_input = int(input("""\nWhich table would you like to check in: """))
+        while user_input != 0:
+            table_choice = user_input - 1
+            pool_table = pool_tables[table_choice]
+            if pool_table.is_available == "Open":
+                print("""
+------------ERROR---------------------------------------------
+Yo! You can't check this one in, because it isn't checked out!
+--------------------------------------------------------------""")
+            else:
+                pool_table.check_in()
+            break
+    except:
+        print("""\n
+----------------ERROR---------------------------
+**OH NO!  What did you do, not enter a number?**
+------------------------------------------------""")
 
 def show_tables():
     for pool_table in pool_tables:
@@ -89,7 +113,7 @@ def show_tables():
 
 user_input = ""
 while user_input != "q":
-    user_input = input("""\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    user_input = input("""\n
                                   OPTIONS MENU
 
                         -----------------------------------
