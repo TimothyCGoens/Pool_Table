@@ -19,6 +19,7 @@ class PoolTable:
     def __init__(self, table_no):
         self.table_no = table_no
         self.is_available = "Open"
+        self.date = date
         self.start_time = 0
         self.end_time = 0
         self.total_time = 0
@@ -40,15 +41,17 @@ class PoolTable:
         now = datetime.datetime.now()
         self.is_available = "Open"
         self.end_time = now.strftime("%H:%m:%S")
+        self.date = now.strftime("%b-%d-%Y")
         self.display_end_time = time.time()
         total_time = (self.display_end_time - self.display_start_time)/60
         self.cost = round(total_time * .50)
         self.total_time = round(total_time)
 
-        with open("tables.txt", "a") as file_object:
+        with open(f"{self.date}.tables.txt", "a") as file_object:
             file_object.write(f"""
 ---------------------------------------
 Table {self.table_no}
+Date {self.date}
 Start Time: {self.start_time}
 End time: {self.end_time}
 Total Time Played: {self.total_time}
