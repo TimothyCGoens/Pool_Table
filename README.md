@@ -1,4 +1,8 @@
-# Pool_Table
+# Pool_Table App
+
+** Purpose of the app**: This app was created as a way for anyone running a pool hall to be able to view a list of all tables, whether or not they are in use, and then to check them out and back in again.
+
+Made 100% in Python.
 
 2.22.19
 
